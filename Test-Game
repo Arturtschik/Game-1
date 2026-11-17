@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Mein erstes Game</title>
+  <style>
+    body { margin: 0; background: #111; color: white; font-family: sans-serif; text-align: center; overflow: hidden; }
+    canvas { background: #222; display: block; margin: 20px auto; border: 2px solid #0f0; }
+  </style>
+</head>
+<body>
+  <h2>Punkte: <span id="score">0</span> (Steuerung: Pfeiltasten)</h2>
+  <canvas id="game" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    let player = { x: 180, y: 350, size: 30 };
+    let coin = { x: 190, y: 0, size: 15 };
+    let score = 0;
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft" && player.x > 0) player.x -= 25;
+      if (e.key === "ArrowRight" && player.x < 370) player.x += 25;
+    });
+
+    function loop() {
+      ctx.clearRect(0, 0, 400, 400);
+      coin.y += 4;
+      if (coin.y > 400) { coin.y = 0; coin.x = Math.random() * 380; }
+      if (coin.x < player.x + player.size && coin.x + coin.size > player.x &&
+          coin.y < player.y + player.size && coin.y + coin.size > player.y) {
+        score++;
+        document.getElementById("score").innerText = score;
+        coin.y = 0; coin.x = Math.random() * 380;
+      }
+      ctx.fillStyle = "#0f0"; ctx.fillRect(player.x, player.y, player.size, player.size);
+      ctx.fillStyle = "gold"; ctx.fillRect(coin.x, coin.y, coin.size, coin.size);
+      requestAnimationFrame(loop);
+    }
+    loop();
+  </script>
+</body>
+</html>
